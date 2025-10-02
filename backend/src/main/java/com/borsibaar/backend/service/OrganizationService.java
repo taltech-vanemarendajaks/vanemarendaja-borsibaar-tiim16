@@ -41,15 +41,11 @@ public class OrganizationService {
         return organizationMapper.toResponse(organization);
     }
 
+    @Transactional(readOnly = true)
     public List<OrganizationResponseDto> getAll() {
         return organizationRepository.findAll()
                 .stream()
-                .map(org -> new OrganizationResponseDto(
-                        org.getId(),
-                        org.getName(),
-                        org.getCreatedAt(),
-                        org.getUpdatedAt()
-                ))
+                .map(organizationMapper::toResponse)
                 .toList();
     }
 }

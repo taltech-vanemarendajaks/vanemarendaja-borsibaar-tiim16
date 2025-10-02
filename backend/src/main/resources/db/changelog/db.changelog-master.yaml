@@ -135,6 +135,38 @@ databaseChangeLog:
                   value: ADMIN
 
   - changeSet:
+      id: 008-insert-default-organizations
+      author: system
+      changes:
+        - insert:
+            tableName: organizations
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: Default Organization
+        - insert:
+            tableName: organizations
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: TalTech ITÜK
+        - insert:
+            tableName: organizations
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: name
+                  value: University of Tartu
+
+  - changeSet:
       id: 006-create-categories
       author: kris
       changes:

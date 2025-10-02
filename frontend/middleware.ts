@@ -1,0 +1,57 @@
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+
+// Lightweight fetch of account for routing; avoid large bodies.
+async function fetchUser(req: NextRequest) {
+  try {
+    const res = await fetch(`${backendUrl}/api/account`, {
+      headers: { cookie: req.headers.get('cookie') || '' },
+      cache: 'no-store',
+    });
+    if (res.status === 401) return null;
+    if (!res.ok) return null;
+    const ct = res.headers.get('content-type') || '';
+    if (!ct.includes('application/json')) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+  if (!['/login', '/dashboard', '/onboarding'].some(p => pathname.startsWith(p))) {
+    return NextResponse.next();
+  }
+
+  const user: any = await fetchUser(req);
+
+  // /login redirects if authenticated
+  if (pathname.startsWith('/login')) {
+    if (user) {
+      return NextResponse.redirect(new URL(user.needsOnboarding ? '/onboarding' : '/dashboard', req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Protected routes: /dashboard, /onboarding
+  if (!user) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  if (pathname.startsWith('/dashboard') && user.needsOnboarding) {
+    return NextResponse.redirect(new URL('/onboarding', req.url));
+  }
+
+  if (pathname.startsWith('/onboarding') && user.needsOnboarding === false) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/login', '/dashboard/:path*', '/onboarding/:path*'],
+};
