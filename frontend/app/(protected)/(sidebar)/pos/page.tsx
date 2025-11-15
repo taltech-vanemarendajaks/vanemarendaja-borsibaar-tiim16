@@ -313,7 +313,7 @@ export default function POSManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 w-full">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="rounded-lg bg-card p-6 shadow-sm mb-6">

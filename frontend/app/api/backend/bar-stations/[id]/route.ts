@@ -90,7 +90,8 @@ export async function DELETE(
       );
     }
 
-    return NextResponse.json(null, { status: 204 });
+    // Backend returns 204 No Content, return the same
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Error deleting bar station:", error);
     return NextResponse.json(
