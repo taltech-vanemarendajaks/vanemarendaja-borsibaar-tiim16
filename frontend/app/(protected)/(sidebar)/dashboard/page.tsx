@@ -19,6 +19,8 @@ interface UserSalesStats {
   userEmail: string;
   salesCount: number;
   totalRevenue: number;
+  barStationId: number | null;
+  barStationName: string | null;
 }
 
 export default function Dashboard() {
@@ -97,12 +99,12 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-        <div className="min-h-screen w-full bg-background p-6 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading dashboard...</p>
-          </div>
+      <div className="min-h-screen w-full bg-background p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
         </div>
+      </div>
     );
   }
 
@@ -178,6 +180,9 @@ export default function Dashboard() {
                         User
                       </th>
                       <th className="text-left py-2 text-muted-foreground font-medium">
+                        Station
+                      </th>
+                      <th className="text-left py-2 text-muted-foreground font-medium">
                         Sales Count
                       </th>
                       <th className="text-left py-2 text-muted-foreground font-medium">
@@ -186,9 +191,11 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {salesStats.map((stat) => (
+                    {salesStats.map((stat, index) => (
                       <tr
-                        key={stat.userId}
+                        key={`${stat.userId}-${
+                          stat.barStationId || "null"
+                        }-${index}`}
                         className="border-b border-border last:border-0"
                       >
                         <td className="py-3">
@@ -200,6 +207,12 @@ export default function Dashboard() {
                               {stat.userEmail}
                             </div>
                           </div>
+                        </td>
+                        <td className="py-3 text-card-foreground">
+                          {stat.barStationName ||
+                            (stat.barStationId
+                              ? `Station ${stat.barStationId}`
+                              : "N/A")}
                         </td>
                         <td className="py-3 text-card-foreground font-medium">
                           {stat.salesCount}
