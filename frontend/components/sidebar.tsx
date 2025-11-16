@@ -10,6 +10,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import { ChartLine, Home, LogOut, Package, ShoppingCart } from "lucide-react";
@@ -38,7 +39,32 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+function SidebarContentItems() {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
+  return (
+    <>
+      {items.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton asChild size="lg" tooltip={item.title}>
+            <a href={item.url} className="flex items-center">
+              <item.icon className="!w-6 !h-6" />
+              {!isCollapsed && (
+                <span className="text-lg font-medium">{item.title}</span>
+              )}
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </>
+  );
+}
+
+function SidebarFooterContent() {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
   const handleLogout = async () => {
     try {
       await fetch("/api/logout", { method: "POST" });
@@ -49,35 +75,32 @@ export function AppSidebar() {
   };
 
   return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" onClick={handleLogout} tooltip="Logout">
+          <LogOut className="!w-5 !h-5" />
+          {!isCollapsed && <span className="text-lg font-medium">Logout</span>}
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}
+
+export function AppSidebar() {
+  return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-md">Börsibaar</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild size="lg">
-                    <a href={item.url} className="flex items-center">
-                      <item.icon className="!w-5 !h-5" />
-                      <span className="text-lg font-medium">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className="gap-3">
+              <SidebarContentItems />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" onClick={handleLogout}>
-              <LogOut className="!w-5 !h-5" />
-              <span className="text-lg font-medium">Logout</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarFooterContent />
       </SidebarFooter>
     </Sidebar>
   );
