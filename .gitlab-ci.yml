@@ -61,7 +61,7 @@ deploy-job:
     - cp $ENV_PRODUCTION_FILE .env.production
     
     # Create deployment package
-    - tar czf deployment.tar.gz backend/target/*.jar frontend/ docker-compose.prod.yaml backend/Dockerfile .env.production
+    - tar czf deployment.tar.gz backend/target/*.jar frontend/ docker-compose.prod.yaml backend/Dockerfile frontend/Dockerfile .env.production
     
     # Copy to server
     - scp deployment.tar.gz $SSH_USER@$SERVER_IP:/tmp/
