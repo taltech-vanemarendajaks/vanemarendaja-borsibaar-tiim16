@@ -433,17 +433,17 @@ export default function PriceHistoryGraphFancy({
       .attr("filter", "url(#glowBlue)");
 
     // last price badge (top-right)
-    const firstPrice = windowed[0].price;
-    const lastPrice = windowed[windowed.length - 1].price;
-    const change = lastPrice - firstPrice;
-    const changePct =
-      firstPrice !== 0 ? (change / firstPrice) * 100 : 0;
+    // const firstPrice = windowed[0].price;
+    // const lastPrice = windowed[windowed.length - 1].price;
+    // const change = lastPrice - firstPrice;
+    // const changePct =
+    //   firstPrice !== 0 ? (change / firstPrice) * 100 : 0;
 
-    const priceLabel = money.format(lastPrice);
-    const changeLabel =
-      change === 0
-        ? "0.0%"
-        : `${change > 0 ? "+" : "-"}${Math.abs(changePct).toFixed(1)}%`;
+    // const priceLabel = money.format(lastPrice);
+    // const changeLabel =
+    //   change === 0
+    //     ? "0.0%"
+    //     : `${change > 0 ? "+" : "-"}${Math.abs(changePct).toFixed(1)}%`;
 
   }, [windowed, cutoff, now, delta, current?.productInv?.productName, money]);
 
