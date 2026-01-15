@@ -1,6 +1,15 @@
-FROM eclipse-temurin:21-jdk
-WORKDIR /app
+FROM eclipse-temurin:21-jdk AS base
+WORKDIR /build
 COPY . .
 RUN ./mvnw dependency:go-offline
+
+FROM base AS test
+WORKDIR /build
+COPY ./src src/
+RUN --mount=type=bind,source=pom.xml,target=pom.xml \
+    --mount=type=cache,target=/root/.m2
+
+FROM base
+WORKDIR /app
 CMD ["./mvnw", "spring-boot:run"]
 EXPOSE 8080
