@@ -1,0 +1,11 @@
+backend/.env
+.env
+.idea/
+.docker-image.yml
+
+.vscode/
+
+# SSL certificates (copied during deployment, not committed)
+nginx/ssl/
+*.pem
+*.key
