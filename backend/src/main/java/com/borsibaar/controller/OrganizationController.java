@@ -18,7 +18,7 @@ import java.util.List;
 public class OrganizationController {
 
     private final OrganizationService organizationService;
-    private static final Logger logger = LogManager.getLogger(InventoryController.class);
+    private static final Logger logger = LogManager.getLogger(OrganizationController.class);
 
 
     @PostMapping

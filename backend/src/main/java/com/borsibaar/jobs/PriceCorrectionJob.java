@@ -21,7 +21,7 @@ public class PriceCorrectionJob {
     private final InventoryRepository inventoryRepository;
     private final InventoryTransactionRepository inventoryTransactionRepository;
     private final ProductRepository productRepository;
-    private static final Logger logger = LogManager.getLogger(InventoryController.class);
+    private static final Logger logger = LogManager.getLogger(PriceCorrectionJob.class);
 
 
     public PriceCorrectionJob(InventoryRepository inventoryRepository,
