@@ -989,3 +989,6 @@ databaseChangeLog:
         - dropColumn:
             columnName: price_decrease_step
             tableName: organizations
+
+  - include:
+        file: db/changelog/changes/015-remove-inventory-organization-id.yaml

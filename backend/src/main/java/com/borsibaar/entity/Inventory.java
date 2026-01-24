@@ -25,9 +25,9 @@ public class Inventory {
     /**
      * TODO: remove duplicate organizationId (already in products table)
      */
-    @Deprecated
-    @Column(name = "organization_id", nullable = false)
-    private Long organizationId;
+    // @Deprecated
+    // @Column(name = "organization_id", nullable = false)
+    // private Long organizationId;
 
     @Column(name = "product_id", nullable = false, insertable = false, updatable = false)
     private Long productId;
@@ -52,8 +52,7 @@ public class Inventory {
     private Set<InventoryTransaction> transactions = new HashSet<>();
 
     // Custom constructor for easy creation
-    public Inventory(Long organizationId, Product product, BigDecimal quantity, BigDecimal adjustedPrice) {
-        this.organizationId = organizationId;
+    public Inventory(Product product, BigDecimal quantity, BigDecimal adjustedPrice) {
         this.product = product;
         this.quantity = quantity;
         this.adjustedPrice = adjustedPrice;
