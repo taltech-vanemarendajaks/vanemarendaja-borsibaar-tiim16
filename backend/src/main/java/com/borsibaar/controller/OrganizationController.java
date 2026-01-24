@@ -5,6 +5,8 @@ import com.borsibaar.dto.OrganizationResponseDto;
 import com.borsibaar.service.OrganizationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,8 @@ import java.util.List;
 public class OrganizationController {
 
     private final OrganizationService organizationService;
+    private static final Logger logger = LogManager.getLogger(OrganizationController.class);
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,7 +39,7 @@ public class OrganizationController {
 
     @PutMapping("/{id}")
     public OrganizationResponseDto update(@PathVariable Long id, @RequestBody @Valid OrganizationRequestDto request) {
-        System.out.println(request);
+        logger.debug(request);
         return organizationService.update(id, request);
     }
 
