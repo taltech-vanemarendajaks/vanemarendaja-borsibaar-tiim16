@@ -11,11 +11,17 @@ import com.borsibaar.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CategoryService {
+
+    private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
+
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
@@ -44,6 +50,14 @@ public class CategoryService {
         }
 
         Category saved = categoryRepository.save(category);
+
+        log.info(
+            "Category created: id={}, name='{}', organizationId={}",
+            saved.getId(),
+            saved.getName(),
+            organizationId
+        );
+
         return categoryMapper.toResponse(saved);
     }
 
@@ -55,6 +69,12 @@ public class CategoryService {
         for (Category category : categories) {
             responseDtos.add(categoryMapper.toResponse(category));
         }
+
+        log.info(
+            "Found {} categories for organizationId={}",
+            responseDtos.size(),
+            organizationId
+        );
 
         return responseDtos;
     }
@@ -76,6 +96,13 @@ public class CategoryService {
                 .map(category -> {
                     CategoryResponseDto dto = categoryMapper.toResponse(category);
                     categoryRepository.delete(category);
+
+                    log.info(
+                        "Category deleted: id={}, name='{}'",
+                        category.getId(),
+                        category.getName()
+                    );
+                    
                     return dto;
                 })
                 .orElseThrow(() -> new NotFoundException("Category not found: " + id));
