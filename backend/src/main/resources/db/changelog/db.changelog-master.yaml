@@ -989,3 +989,21 @@ databaseChangeLog:
         - dropColumn:
             columnName: price_decrease_step
             tableName: organizations
+  - changeSet:
+      id: 015-drop-organizationId-from-inventory-table
+      author: kpajula
+      changes:
+        - dropForeignKeyConstraint:
+              baseTableName: inventory
+              constraintName: fk_inventory_org
+        - dropColumn:
+            columnName: organization_id
+            tableName: inventory
+      rollback: |
+          UPDATE inventory i
+            SET organization_id = a.organization_id
+          FROM (
+            SELECT distinct i.id inv_id, p.organization_id
+            FROM inventory i join products p ON i.product_id = p.id
+          ) a 
+          WHERE i.productId = a.prod_id
