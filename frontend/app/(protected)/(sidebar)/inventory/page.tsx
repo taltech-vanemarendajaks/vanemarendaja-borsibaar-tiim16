@@ -13,6 +13,7 @@ import {
   ListPlus,
   Trash,
 } from "lucide-react";
+// Kommentaar siia
 
 interface InventoryTransactionResponseDto {
   id: number;
