@@ -46,6 +46,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
+// kommentaar
 export const dynamic = "force-dynamic";
 
 export default function Inventory() {
