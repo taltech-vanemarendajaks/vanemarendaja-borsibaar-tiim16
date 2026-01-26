@@ -1,6 +1,9 @@
 backend/.env
 .env
 .idea/
+.docker-image.yml
+.docker-compose.yaml
+.docker-compose.prod.yaml
 
 .vscode/
 
