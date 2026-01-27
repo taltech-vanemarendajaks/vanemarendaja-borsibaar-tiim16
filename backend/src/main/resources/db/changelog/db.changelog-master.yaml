@@ -994,8 +994,8 @@ databaseChangeLog:
       author: kpajula
       changes:
         - dropForeignKeyConstraint:
-              baseTableName: inventory
-              constraintName: fk_inventory_org
+            baseTableName: inventory
+            constraintName: fk_inventory_org
         - dropColumn:
             columnName: organization_id
             tableName: inventory
@@ -1016,11 +1016,30 @@ databaseChangeLog:
             referencedColumnNames: id
             onDelete: RESTRICT
             onUpdate: RESTRICT
-        - sql: |
-            UPDATE inventory i
-              SET organization_id = a.organization_id
-            FROM (
-              SELECT distinct i.id inv_id, p.organization_id
-              FROM inventory i join products p ON i.product_id = p.id
-            ) a 
-            WHERE i.id = a.inv_id
+        - addUniqueConstraint:
+            tableName: inventory
+            columnNames: organization_id, product_id
+            constraintName: uk_inventory_org_product
+        - sql:
+            dbms: postgresql
+            sql: |
+              UPDATE inventory i
+                SET organization_id = a.organization_id
+              FROM (
+                SELECT i2.id AS inv_id, p.organization_id
+                FROM inventory i2
+              J OIN products p ON i2.product_id = p.id
+              ) a
+              WHERE i.id = a.inv_id
+  - changeSet:
+      id: 016-add-unique-product-in-inventory
+      author: wiseSphynx
+      changes:
+        - addUniqueConstraint:
+            tableName: inventory
+            columnNames: product_id
+            constraintName: uk_inventory_product
+      rollback:
+        - dropUniqueConstraint:
+            tableName: inventory
+            constraintName: uk_inventory_product
