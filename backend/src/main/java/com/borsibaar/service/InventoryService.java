@@ -13,6 +13,7 @@ import com.borsibaar.repository.InventoryTransactionRepository;
 import com.borsibaar.repository.ProductRepository;
 import com.borsibaar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
@@ -150,6 +152,17 @@ public class InventoryService {
                 oldQuantity, newQuantity, currentPrice, currentPrice, null, request.notes(), userId);
 
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
+
+        log.info(
+                "STOCK_ADDED productId={} orgId={} added={} before={} after={} userId={}",
+                product.getId(),
+                organizationId,
+                request.quantity(),
+                oldQuantity,
+                newQuantity,
+                userId
+        );
+
         return new InventoryResponseDto(
                 base.id(),
                 product.getOrganizationId(),
@@ -195,6 +208,17 @@ public class InventoryService {
                 request.notes(), userId);
 
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
+
+        log.info(
+                "STOCK_REMOVED productId={} orgId={} removed={} before={} after={} userId={}",
+                product.getId(),
+                organizationId,
+                request.quantity(),
+                oldQuantity,
+                newQuantity,
+                userId
+        );
+
         return new InventoryResponseDto(
                 base.id(),
                 product.getOrganizationId(),
