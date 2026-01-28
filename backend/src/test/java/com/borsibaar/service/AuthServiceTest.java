@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+// test komm
 @SpringBootTest
 @ActiveProfiles("test")
 class AuthServiceTest {

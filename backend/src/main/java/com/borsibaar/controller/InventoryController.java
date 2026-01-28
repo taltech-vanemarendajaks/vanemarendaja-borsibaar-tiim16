@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import java.util.List;
 
@@ -17,6 +20,8 @@ import java.util.List;
 public class InventoryController {
 
     private final InventoryService inventoryService;
+    private static final Logger logger = LogManager.getLogger(InventoryController.class);
+
 
     @GetMapping
     public List<InventoryResponseDto> getOrganizationInventory(
@@ -44,9 +49,9 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public InventoryResponseDto addStock(@RequestBody @Valid AddStockRequestDto request) {
         User user = SecurityUtils.getCurrentUser();
-        System.out.println("Received request: " + request); // DEBUG
-        System.out.println("ProductId: " + request.productId()); // DEBUG
-        System.out.println("Quantity: " + request.quantity()); // DEBUG
+        logger.debug("Received request: {}", request);
+        logger.debug("ProductId: {}", request.productId());
+        logger.debug("Quantity: {}", request.quantity());
 
         return inventoryService.addStock(request, user.getId(), user.getOrganizationId());
     }

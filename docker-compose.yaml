@@ -10,7 +10,15 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+  backend-tests:
+    build:
+      context: backend
+      dockerfile: Dockerfile.dev
+      target: test
+    container_name: borsibaar-backend-tests
+    command: ["./mvnw", "test"]
+    environment:
+      SPRING_PROFILES_ACTIVE: test
   backend:
     build:
       context: backend

@@ -70,7 +70,7 @@ public class InventoryService {
 
                     return new InventoryResponseDto(
                             base.id(),
-                            base.organizationId(),
+                            product.getOrganizationId(),
                             base.productId(),
                             productName,
                             base.quantity(),
@@ -108,7 +108,7 @@ public class InventoryService {
 
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 productName,
                 base.quantity(),
@@ -129,7 +129,6 @@ public class InventoryService {
                 .findByOrganizationIdAndProductId(organizationId, request.productId())
                 .orElseGet(() -> {
                     Inventory newInv = new Inventory();
-                //     newInv.setOrganizationId(organizationId);
                     newInv.setProduct(product);
                     newInv.setQuantity(BigDecimal.ZERO);
                     newInv.setAdjustedPrice(product.getBasePrice());
@@ -166,7 +165,7 @@ public class InventoryService {
 
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),
@@ -218,11 +217,11 @@ public class InventoryService {
                 oldQuantity,
                 newQuantity,
                 userId
-        );     
+        );
 
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),
@@ -260,7 +259,7 @@ public class InventoryService {
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),
