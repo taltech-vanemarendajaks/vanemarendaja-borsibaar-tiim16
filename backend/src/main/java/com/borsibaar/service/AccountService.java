@@ -19,8 +19,12 @@ public class AccountService {
     }
 
     public Role findRoleByName(String roleName) {
-        return roleRepository.findByName(roleName)
-                .orElseThrow(() -> new IllegalArgumentException("Admin role ADMIN not found"));
+    return roleRepository.findByName(roleName)
+            .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            String.format("Role '%s' not found", roleName)
+                    )
+            );
     }
 
     public List<User> findUsersByOrganizationAndRole(Long organizationId, Role adminRole) {
