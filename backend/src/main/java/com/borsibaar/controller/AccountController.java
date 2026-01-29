@@ -4,6 +4,7 @@ import com.borsibaar.entity.Role;
 import com.borsibaar.entity.User;
 import com.borsibaar.repository.RoleRepository;
 import com.borsibaar.repository.UserRepository;
+import com.borsibaar.service.AccountService;
 import com.borsibaar.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/account")
 @RequiredArgsConstructor
 public class AccountController {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final AccountService accountService;
 
     public record MeResponse(String email, String name, String role, Long organizationId, boolean needsOnboarding) {
     }
@@ -58,17 +58,16 @@ public class AccountController {
             // Allow users without organization (that's the point of onboarding)
             User user = SecurityUtils.getCurrentUser(false);
 
-            Role adminRole = roleRepository.findByName("ADMIN")
-                    .orElseThrow(() -> new IllegalArgumentException("Admin role ADMIN not found"));
+            Role adminRole = accountService.findRoleByName("ADMIN");
 
             // Set org and role if needed (idempotent: do nothing if already set)
             if (user.getOrganizationId() == null) {
                 // At least one user must be admin
-                if (userRepository.findByOrganizationIdAndRole(req.organizationId(), adminRole).isEmpty()) {
+                if (accountService.findUsersByOrganizationAndRole(req.organizationId(), adminRole).isEmpty()) {
                     user.setRole(adminRole);
                 }
                 user.setOrganizationId(req.organizationId());
-                userRepository.save(user);
+                accountService.saveUser(user);
             }
 
             // If later you add orgId to JWT, re-issue token here.
