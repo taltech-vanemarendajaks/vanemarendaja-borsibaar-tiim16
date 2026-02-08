@@ -13,6 +13,7 @@ import com.borsibaar.repository.InventoryTransactionRepository;
 import com.borsibaar.repository.ProductRepository;
 import com.borsibaar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
@@ -68,7 +70,7 @@ public class InventoryService {
 
                     return new InventoryResponseDto(
                             base.id(),
-                            base.organizationId(),
+                            product.getOrganizationId(),
                             base.productId(),
                             productName,
                             base.quantity(),
@@ -106,7 +108,7 @@ public class InventoryService {
 
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 productName,
                 base.quantity(),
@@ -127,7 +129,6 @@ public class InventoryService {
                 .findByOrganizationIdAndProductId(organizationId, request.productId())
                 .orElseGet(() -> {
                     Inventory newInv = new Inventory();
-                    newInv.setOrganizationId(organizationId);
                     newInv.setProduct(product);
                     newInv.setQuantity(BigDecimal.ZERO);
                     newInv.setAdjustedPrice(product.getBasePrice());
@@ -151,9 +152,20 @@ public class InventoryService {
                 oldQuantity, newQuantity, currentPrice, currentPrice, null, request.notes(), userId);
 
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
+
+        log.info(
+                "STOCK_ADDED productId={} orgId={} added={} before={} after={} userId={}",
+                product.getId(),
+                organizationId,
+                request.quantity(),
+                oldQuantity,
+                newQuantity,
+                userId
+        );
+
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),
@@ -196,9 +208,20 @@ public class InventoryService {
                 request.notes(), userId);
 
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
+
+        log.info(
+                "STOCK_REMOVED productId={} orgId={} removed={} before={} after={} userId={}",
+                product.getId(),
+                organizationId,
+                request.quantity(),
+                oldQuantity,
+                newQuantity,
+                userId
+        );
+
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),
@@ -236,7 +259,7 @@ public class InventoryService {
         InventoryResponseDto base = inventoryMapper.toResponse(inventory);
         return new InventoryResponseDto(
                 base.id(),
-                base.organizationId(),
+                product.getOrganizationId(),
                 base.productId(),
                 product.getName(),
                 base.quantity(),

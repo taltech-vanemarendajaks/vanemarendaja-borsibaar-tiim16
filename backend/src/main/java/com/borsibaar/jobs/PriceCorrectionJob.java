@@ -1,9 +1,12 @@
 package com.borsibaar.jobs;
 
+import com.borsibaar.controller.InventoryController;
 import com.borsibaar.entity.Inventory;
 import com.borsibaar.entity.InventoryTransaction;
 import com.borsibaar.entity.Product;
 import com.borsibaar.repository.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ public class PriceCorrectionJob {
     private final InventoryRepository inventoryRepository;
     private final InventoryTransactionRepository inventoryTransactionRepository;
     private final ProductRepository productRepository;
+    private static final Logger logger = LogManager.getLogger(PriceCorrectionJob.class);
+
 
     public PriceCorrectionJob(InventoryRepository inventoryRepository,
             InventoryTransactionRepository inventoryTransactionRepository,
@@ -29,11 +34,11 @@ public class PriceCorrectionJob {
 
     @Scheduled(cron = "0 * * * * *")
     public void adjustPrices() {
-        System.out.println("Running price reduction job");
+        logger.info("Running price reduction job");
         List<Product> inactiveProducts = productRepository.findByActiveOrgAndInactiveSalesLastMinute();
 
         if (inactiveProducts.isEmpty()) {
-            System.out.println("No product prices to update automatically");
+            logger.info("No product prices to update automatically");
             return;
         }
 
@@ -42,7 +47,6 @@ public class PriceCorrectionJob {
             Inventory inventory = Optional.ofNullable(product.getInventory())
                     .orElseGet(() -> {
                         Inventory newInv = new Inventory();
-                        newInv.setOrganizationId(product.getOrganizationId());
                         newInv.setProduct(product);
                         newInv.setQuantity(BigDecimal.ZERO);
                         newInv.setAdjustedPrice(product.getBasePrice());
@@ -85,6 +89,6 @@ public class PriceCorrectionJob {
 
             updatedCount++;
         }
-        System.out.println("Updated prices of " + updatedCount + " products.");
+        logger.info("Updated prices of {} products.", updatedCount);
     }
 }

@@ -13,6 +13,7 @@ import com.borsibaar.repository.InventoryTransactionRepository;
 import com.borsibaar.repository.ProductRepository;
 import com.borsibaar.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -65,6 +67,14 @@ public class ProductService {
         createInitialInventory(saved, orgId);
 
         ProductResponseDto base = productMapper.toResponse(saved);
+
+        log.info(
+            "PRODUCT_CREATED productId={} orgId={} name={}",
+            saved.getId(),
+            orgId,
+            saved.getName()
+        );
+
         return new ProductResponseDto(
                 base.id(),
                 base.name(),
@@ -77,7 +87,7 @@ public class ProductService {
     }
 
     private void createInitialInventory(Product product, Long organizationId) {
-        Inventory inventory = new Inventory(organizationId, product, BigDecimal.ZERO, product.getBasePrice());
+        Inventory inventory = new Inventory(product, BigDecimal.ZERO, product.getBasePrice());
         Inventory savedInventory = inventoryRepository.save(inventory);
 
         InventoryTransaction transaction = new InventoryTransaction();
@@ -120,6 +130,12 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Product not found: " + id));
+
+        log.info(
+            "PRODUCT_DEACTIVATED productId={} orgId={}",
+            product.getId(),
+            product.getOrganizationId()
+        );
 
         // Mark as inactive instead of hard delete to preserve inventory history
         product.setActive(false);
