@@ -75,7 +75,9 @@ jobs:
           cp -r ~/certbot ./certbot
 
           printf '%s\n' "$ENV_PRODUCTION_FILE" > .env
-
+          
+          mkdir -p ./nginx/conf.d
+          
           printf '%s\n' "$NGINX_CONF" > ./nginx/nginx.conf
 
           printf '%s\n' "$NGINX_CONF_D" > ./nginx/conf.d/borsibaar-https.conf
