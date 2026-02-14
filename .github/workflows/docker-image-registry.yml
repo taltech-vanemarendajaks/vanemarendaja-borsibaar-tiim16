@@ -69,8 +69,8 @@ jobs:
             "$SSH_USER@$SERVER_IP" << 'EOF'
           set -e
 
-          mkdir -p $DEPLOY_PATH
-          cd $DEPLOY_PATH
+          mkdir -p "$DEPLOY_PATH"
+          cd "$DEPLOY_PATH"
 
           printf '%s\n' "$ENV_PRODUCTION_FILE" > .env
 
