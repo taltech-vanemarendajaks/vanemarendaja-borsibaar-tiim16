@@ -19,8 +19,8 @@ jobs:
       DEPLOY_PATH: ~/borsibaar
       ENV_PRODUCTION_FILE: ${{ secrets.ENV_PRODUCTION_FILE }}
       DOCKER_COMPOSE_FILE: ${{ vars.COMPOSE_PROD_FILE }}
-      NGINX_CONF: ${{ vars.NGINX_CONF }}
-      NGINX_CONF_D: ${{ vars.BORSIBAAR_CONF_D }}
+      NGINX_CONF: ${{ vars.NGINX_CONF }}
+      NGINX_CONF_D: ${{ vars.BORSIBAAR_CONF_D }}
 
     steps:
       - name: Checkout code
@@ -47,7 +47,9 @@ jobs:
           tags: |
             ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/frontend:latest,
             ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/frontend:1.0.0
-      
+          build-args: |
+            NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
