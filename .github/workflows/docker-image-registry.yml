@@ -77,13 +77,16 @@ jobs:
           printf '%s' "$ENV_PRODUCTION_FILE" > .env
           
           mkdir -p ./nginx/conf.d
+          cat > ./nginx/nginx.conf << 'EOF'
+          ${{ vars.NGINX_CONF }}
+          EOF
+          cat > ./nginx/conf.d/borsibaar-https.conf << 'EOF'
+          ${{ vars.BORSIBAAR_CONF_D }}
+          EOF
+          cat > ./docker-compose.yaml << 'EOF'
+          ${{ vars.COMPOSE_PROD_FILE }}
+          EOF
           
-          printf '%s' "$NGINX_CONF" > ./nginx/nginx.conf
-
-          printf '%s' "$NGINX_CONF_D" > ./nginx/conf.d/borsibaar-https.conf
-
-          printf '%s' "$DOCKER_COMPOSE_FILE" > ./docker-compose.yaml
-
           docker compose pull
           docker compose up -d
           docker compose prune -f
