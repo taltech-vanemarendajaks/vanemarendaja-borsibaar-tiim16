@@ -16,7 +16,7 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SERVER_IP: ${{ secrets.SERVER_IP }}
-      DEPLOY_PATH: ~/borsibaar
+      DEPLOY_PATH: ~/borsibaar-gh-action-deploy
       ENV_PRODUCTION_FILE: ${{ secrets.ENV_PRODUCTION_FILE }}
       DOCKER_COMPOSE_FILE: ${{ vars.COMPOSE_PROD_FILE }}
       NGINX_CONF: ${{ vars.NGINX_CONF }}
@@ -66,7 +66,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa \
             -o StrictHostKeyChecking=yes \
-            "$SSH_USER@$SERVER_IP" << EOF
+            "$SSH_USER@$SERVER_IP" << 'EOF'
           set -e
 
           mkdir -p $DEPLOY_PATH
