@@ -69,23 +69,23 @@ jobs:
             "$SSH_USER@$SERVER_IP" << EOF
           set -e
 
-          mkdir -p "$DEPLOY_PATH"
-          cd "$DEPLOY_PATH"
+          mkdir -p $DEPLOY_PATH
+          cd $DEPLOY_PATH
           
           cp -r ~/certbot ./certbot
 
-          printf '%s' "$ENV_PRODUCTION_FILE" > .env
+          printf '%s\n' "$ENV_PRODUCTION_FILE" > .env
           
           mkdir -p ./nginx/conf.d
           cat > ./nginx/nginx.conf << 'EOF'
-          ${{ vars.NGINX_CONF }}
-          EOF
+${{ vars.NGINX_CONF }}
+EOF
           cat > ./nginx/conf.d/borsibaar-https.conf << 'EOF'
-          ${{ vars.BORSIBAAR_CONF_D }}
-          EOF
+${{ vars.BORSIBAAR_CONF_D }}
+EOF
           cat > ./docker-compose.yaml << 'EOF'
-          ${{ vars.COMPOSE_PROD_FILE }}
-          EOF
+${{ vars.COMPOSE_PROD_FILE }}
+EOF
           
           docker compose pull
           docker compose up -d
