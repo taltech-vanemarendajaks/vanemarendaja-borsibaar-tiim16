@@ -66,11 +66,13 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa \
             -o StrictHostKeyChecking=yes \
-            "$SSH_USER@$SERVER_IP" << 'EOF'
+            "$SSH_USER@$SERVER_IP" << EOF
           set -e
 
           mkdir -p "$DEPLOY_PATH"
           cd "$DEPLOY_PATH"
+          
+          cp -r ~/certbot ./certbot
 
           printf '%s\n' "$ENV_PRODUCTION_FILE" > .env
 
