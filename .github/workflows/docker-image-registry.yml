@@ -37,16 +37,16 @@ jobs:
           push: true
 
           tags: |
-            ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/backend:latest,
-            ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/backend:1.0.0
+            ghcr.io/taltech-vanemarendajaks/tiim-16-backend:latest,
+            ghcr.io/taltech-vanemarendajaks/tiim-16-backend:1.0.0
      
       - uses: docker/build-push-action@v6
         with:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/frontend:latest,
-            ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/frontend:1.0.0
+            ghcr.io/taltech-vanemarendajaks/tiim-16-rontend:latest,
+            ghcr.io/taltech-vanemarendajaks/tiim-16-frontend:1.0.0
           build-args: |
             NEXT_PUBLIC_BACKEND_URL=${{ vars.NEXT_PUBLIC_BACKEND_URL }}
 
