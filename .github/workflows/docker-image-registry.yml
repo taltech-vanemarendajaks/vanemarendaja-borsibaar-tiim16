@@ -3,7 +3,6 @@ name: Build and Deploy
 permissions:
   contents: read
   packages: write
-
 on:
   push:
     branches: [ main ]
@@ -36,6 +35,7 @@ jobs:
         with:
           context: ./backend
           push: true
+
           tags: |
             ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/backend:latest,
             ghcr.io/taltech-vanemarendajaks/vanemarendaja-borsibaar-tiim16/backend:1.0.0
@@ -87,7 +87,7 @@ jobs:
           printf '%s' "$NGINX_CONF_B64" | base64 -d > ./nginx/nginx.conf
           printf '%s' "$NGINX_CONF_D_B64" | base64 -d > ./nginx/conf.d/borsibaar-https.conf
           printf '%s' "$DOCKER_COMPOSE_FILE_B64" | base64 -d > ./docker-compose.yaml 
-          
+          sudo docker login ghcr.io --username ${{ vars.TOKEN_USER }} --password-stdin <<< ${{ secret.PACKAGE_TOKEN }}
           sudo docker compose pull
           sudo docker compose --env-file ./.env up -d 
           sudo docker compose prune -f
