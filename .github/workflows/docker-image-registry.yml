@@ -61,12 +61,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y sshpass openssh-client
-          
+
+      - name: Encode config files
+        run: |
+          echo ENV_PRODUCTION_FILE_B64=$(printf '%s' "$ENV_PRODUCTION_FILE" | base64 -w0) >> "$GITHUB_ENV"
+          echo NGINX_CONF_B64=$(printf '%s' "$NGINX_CONF" | base64 -w0) >> "$GITHUB_ENV"
+          echo NGINX_CONF_D_B64=$(printf '%s' "$NGINX_CONF_D" | base64 -w0) >> "$GITHUB_ENV"
+          echo DOCKER_COMPOSE_FILE_B64=$(printf '%s' "$DOCKER_COMPOSE_FILE" | base64 -w0) >> "$GITHUB_ENV"
+
       - name: Deploy on server
         run: |
           ssh -i ~/.ssh/id_rsa \
             -o StrictHostKeyChecking=yes \
-            "$SSH_USER@$SERVER_IP" << 'EOF'
+            "$SSH_USER@$SERVER_IP" << EOF
           set -e
 
           mkdir -p $DEPLOY_PATH
@@ -74,12 +81,12 @@ jobs:
           
           cp -r ~/certbot ./certbot
 
-          printf '%s' "$ENV_PRODUCTION_FILE" > .env
+          printf '%s' "$ENV_PRODUCTION_FILE_B64" | base64 -d > .env
           
           mkdir -p ./nginx/conf.d
-          printf '%s' "$NGINX_CONF" > ./nginx/nginx.conf
-          printf '%s' "$NGINX_CONF_D" > ./nginx/conf.d/borsibaar-https.conf
-          printf '%s' "$DOCKER_COMPOSE_FILE" > ./docker-compose.yaml 
+          printf '%s' "$NGINX_CONF_B64" | base64 -d > ./nginx/nginx.conf
+          printf '%s' "$NGINX_CONF_D_B64" | base64 -d > ./nginx/conf.d/borsibaar-https.conf
+          printf '%s' "$DOCKER_COMPOSE_FILE_B64" | base64 -d > ./docker-compose.yaml 
           
           docker compose pull
           docker compose --env-file ./.env up -d 
