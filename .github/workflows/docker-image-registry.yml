@@ -90,4 +90,4 @@ jobs:
           sudo docker login ghcr.io --username ${{ vars.TOKEN_USER }} --password-stdin <<< ${{ secrets.PACKAGE_TOKEN }}
           sudo docker compose pull
           sudo docker compose --env-file ./.env up -d 
-          sudo docker compose prune -f
+          sudo docker system prune -f
