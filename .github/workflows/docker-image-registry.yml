@@ -88,6 +88,6 @@ jobs:
           printf '%s' "$NGINX_CONF_D_B64" | base64 -d > ./nginx/conf.d/borsibaar-https.conf
           printf '%s' "$DOCKER_COMPOSE_FILE_B64" | base64 -d > ./docker-compose.yaml 
           
-          docker compose pull
-          docker compose --env-file ./.env up -d 
-          docker compose prune -f
+          sudo docker compose pull
+          sudo docker compose --env-file ./.env up -d 
+          sudo docker compose prune -f
